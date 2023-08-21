@@ -1,0 +1,4 @@
+com\demo\ansible\user\User.class
+com\demo\ansible\service\UserService.class
+com\demo\ansible\controller\UserController.class
+com\demo\ansible\AnsibleApplication.class
