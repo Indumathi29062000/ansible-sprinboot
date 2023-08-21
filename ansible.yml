@@ -2,12 +2,17 @@
 - name: Deploy Spring Boot App
   hosts: localhost
   tasks:
+    - name: Create the destination directory
+      ansible.builtin.file:
+        path: /opt/app
+        state: directory
+
     - name: Copy JAR file
       ansible.builtin.copy:
-        src: "C:/Users/Indumathi/Downloads/ansible/ansible/target/ansible-0.0.1-SNAPSHOT.jar"
+        src: "/mnt/c/Users/Indumathi/Downloads/ansible/ansible/target/ansible-0.0.1-SNAPSHOT.jar"
         dest: /opt/app/app.jar
 
     - name: Start Application
-      ansible.builtin.command: java -jar /opt/app/app.jar --server.port={{ server_port }}
+      ansible.builtin.command: java -jar /opt/app/app.jar
       async: 3600
       poll: 0
