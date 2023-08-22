@@ -1,6 +1,12 @@
 ---
 - name: Deploy Spring Boot App
   hosts: localhost
+  become: yes
+  vars:
+    server_port: 1125
+    app_source: "/mnt/c/Users/Indumathi/Downloads/ansible/ansible/target/ansible-0.0.1-SNAPSHOT.jar"
+    app_dest: "/opt/app/app.jar"
+
   tasks:
     - name: Create the destination directory
       ansible.builtin.file:
@@ -9,10 +15,18 @@
 
     - name: Copy JAR file
       ansible.builtin.copy:
-        src: "/mnt/c/Users/Indumathi/Downloads/ansible/ansible/target/ansible-0.0.1-SNAPSHOT.jar"
-        dest: /opt/app/app.jar
+        src: "{{ app_source }}"
+        dest: "{{ app_dest }}"
+      when: ansible_distribution == 'Ubuntu'  # Conditional based on OS distribution
 
     - name: Start Application
-      ansible.builtin.command: java -jar /opt/app/app.jar
+      ansible.builtin.command: java -jar "{{ app_dest }}" --server.port={{ server_port }}
       async: 3600
       poll: 0
+      notify: Print Message
+
+  handlers:
+    - name: Print Message
+      ansible.builtin.debug:
+        msg: "Application has been started or restarted!"
+
